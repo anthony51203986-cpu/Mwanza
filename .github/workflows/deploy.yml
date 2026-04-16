@@ -1,0 +1,80 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Inject API Keys
+        run: |
+          # Groq Keys
+          sed -i "s|GROQ_API_KEY_PLACEHOLDER|${{ secrets.GROQ_API_KEY }}|g" index.html
+          sed -i "s|SCOUT_API_KEY_PLACEHOLDER|${{ secrets.SCOUT_API_KEY }}|g" index.html
+          
+          # Google Gemini
+          sed -i "s|GEMINI_API_KEY_PLACEHOLDER|${{ secrets.GEMINI_API_KEY }}|g" index.html
+          
+          # Google Gemma
+          sed -i "s|GEMMA_API_KEY_PLACEHOLDER|${{ secrets.GEMMA_API_KEY }}|g" index.html
+          
+          # Mistral AI
+          sed -i "s|MISTRAL_API_KEY_PLACEHOLDER|${{ secrets.MISTRAL_API_KEY }}|g" index.html
+          
+          # Tavily
+          sed -i "s|TAVILY_API_KEY_PLACEHOLDER|${{ secrets.TAVILY_API_KEY }}|g" index.html
+          
+          # Cloudflare
+          sed -i "s|CLOUDFLARE_ACCOUNT_ID_PLACEHOLDER|${{ secrets.CLOUDFLARE_ACCOUNT_ID }}|g" index.html
+          sed -i "s|CLOUDFLARE_API_TOKEN_PLACEHOLDER|${{ secrets.CLOUDFLARE_API_TOKEN }}|g" index.html
+          
+          # NewsAPI
+          sed -i "s|NEWS_API_KEY_PLACEHOLDER|${{ secrets.NEWS_API_KEY }}|g" index.html
+          
+          # Wolfram
+          sed -i "s|WOLFRAM_APP_ID_PLACEHOLDER|${{ secrets.WOLFRAM_APP_ID }}|g" index.html
+          
+          # Wisgate
+          sed -i "s|WISGATE_API_KEY_PLACEHOLDER|${{ secrets.WISGATE_API_KEY }}|g" index.html
+          
+          echo "✅ Groq API key injected"
+          echo "✅ Scout API key injected"
+          echo "✅ Gemini API key injected"
+          echo "✅ Gemma API key injected"
+          echo "✅ Mistral API key injected"
+          echo "✅ Tavily API key injected"
+          echo "✅ Cloudflare Account ID injected"
+          echo "✅ Cloudflare API Token injected"
+          echo "✅ NewsAPI key injected"
+          echo "✅ Wolfram App ID injected"
+          echo "✅ Wisgate API key injected"
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
