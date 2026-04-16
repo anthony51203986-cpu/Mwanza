@@ -32,7 +32,8 @@ jobs:
           
           # Google Gemini
           sed -i "s|GEMINI_API_KEY_PLACEHOLDER|${{ secrets.GEMINI_API_KEY }}|g" index.html
-          
+          sed -i "s|GEMINI_KEY_1_PLACEHOLDER|${{ secrets.GEMINI_KEY_1}}|g" index.html
+          sed -i "s|GEMINI_KEY_2_PLACEHOLDER|${{ secrets.GEMINI_KEY_2 }}|g" index.html
           # Google Gemma
           sed -i "s|GEMMA_API_KEY_PLACEHOLDER|${{ secrets.GEMMA_API_KEY }}|g" index.html
           
